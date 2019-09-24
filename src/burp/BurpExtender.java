@@ -29,7 +29,7 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory, IContex
 		List<JMenuItem> menu = new ArrayList<JMenuItem> ();
 
 		// Add menu entries
-		menu.add(rapid.getMenuEntry("Rapid - Save HTTP Request/Response", false));
+		menu.add(rapid.getMenuEntry("Rapid - Save HTTP Request and Response", false));
 		menu.add(rapid.getMenuEntry("Rapid - Save Files & Screenshot", true));
 
 		return menu;
