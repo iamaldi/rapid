@@ -49,6 +49,7 @@ public class Rapid {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Create frame
 					JFrame fileExplorerFrame = new JFrame();
 
 					// Create file explorer
@@ -158,6 +159,7 @@ public class Rapid {
 			filenames.add(destinationFile.getPath().concat(httpResponseFilenameSuffix));
 		}
 
+		// Write files to disk
 		for (int i = 0; i<2; i++) {
 			// Create file
 			File outfile = new File(filenames.get(i));
@@ -188,6 +190,7 @@ public class Rapid {
 		filenames.add(filePath.substring(0, filePath.length() - index).concat(httpResponseFilenameSuffix));
 	}
 
+	// Captures screenshot and saves it to file (PNG)
 	private void captureScreenshot(File destinationFile) throws AWTException,
 		InterruptedException {
 			// Delay the capture of the screenshot
