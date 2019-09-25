@@ -40,3 +40,6 @@ Given the input ``` get-hostname ```, **Rapid** will generate the following file
 
 ## Installation
 This extension ***will*** soon be available in the [BAppStore](https://portswigger.net/bappstore).
+
+## License
+This project is licensed under GNU GPL v3.0
