@@ -87,3 +87,6 @@ src/burp/ISessionHandlingAction.java
 src/burp/ITab.java
 src/burp/ITempFile.java
 src/burp/ITextEditor.java
+bin/rapid/Rapid.class
+bin/rapid/Rapid$1.class
+bin/rapid/Rapid$2.class
