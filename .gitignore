@@ -90,3 +90,7 @@ src/burp/ITextEditor.java
 bin/rapid/Rapid.class
 bin/rapid/Rapid$1.class
 bin/rapid/Rapid$2.class
+.idea/misc.xml
+.idea/modules.xml
+rapid.iml
+.idea/workspace.xml
