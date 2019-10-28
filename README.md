@@ -39,7 +39,8 @@ Given the input ``` get-hostname ```, **Rapid** will generate the following file
 ######  \* **Rapid** has been configured (with a 1 second delay) to capture a screenshot of whatever is shown on the screen after you click *Save*.  Make sure that you don't close Burp or switch to another window immediately after clicking *Save*. 
 
 ## Installation
-
+Download latest version from Releases
+https://github.com/iamaldi/rapid/releases
 
 ## License
 This project is licensed under GNU GPL v3.0
