@@ -16,14 +16,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Rapid {
     private IBurpExtenderCallbacks callbacks;
     private IContextMenuInvocation invocation;
-    private String httpRequestFilenameSuffix = "-[HTTP-Request].txt";
-    private String httpResponseFilenameSuffix = "-[HTTP-Response].txt";
+    private String filenameSuffix = "-[HTTP-Request-Response].txt";
 
     public Rapid(IBurpExtenderCallbacks callbacks, IContextMenuInvocation invocation) {
         this.callbacks = callbacks;
@@ -40,7 +38,7 @@ public class Rapid {
                     JFileChooser fileExplorer = createFileExplorer(fileExplorerFrame, captureScreenshot);
                     fileExplorer.setFileSelectionMode(JFileChooser.FILES_ONLY);
                     fileExplorer.setFileFilter(new FileNameExtensionFilter("Text Files Only", "txt"));
-                    fileExplorer.setDialogTitle("Choose a file to save to");
+                    fileExplorer.setDialogTitle("Select a file");
                     fileExplorerFrame.add(fileExplorer);
                     fileExplorer.showSaveDialog(fileExplorerFrame);
                 } catch (Exception e1) {
@@ -92,47 +90,34 @@ public class Rapid {
         };
     }
 
-    private void saveDataToFile(File destinationFile, int confirmOverwrite) {
-        // Get HTTP Request / Response data
-        IHttpRequestResponse[] httpRequestResponse = invocation.getSelectedMessages();
-        ArrayList<String> filenames = new ArrayList<>(2);
-
-        if (confirmOverwrite == 0) {
-            if (destinationFile.getAbsoluteFile().getName().contains(httpRequestFilenameSuffix)) {
-                setFilenames(destinationFile.getPath(), filenames, 19);
-            } else if (destinationFile.getAbsoluteFile().getName().contains(httpResponseFilenameSuffix)) {
-                setFilenames(destinationFile.getPath(), filenames, 20);
-            } else if (destinationFile.getAbsoluteFile().getName().contains(".txt")) {
-                setFilenames(destinationFile.getPath(), filenames, 4);
-            }
-
-        } else {
-            filenames.add(destinationFile.getPath().concat(httpRequestFilenameSuffix));
-            filenames.add(destinationFile.getPath().concat(httpResponseFilenameSuffix));
+    private void saveDataToFile(File destinationFile, int overwriteFile) {
+        // Get HTTP data from interface
+        IHttpRequestResponse[] httpData = invocation.getSelectedMessages();
+        String destinationFilename = null;
+        String dataSeparator = "\n";
+        String request = callbacks.getHelpers().bytesToString(httpData[0].getRequest());
+        String response = callbacks.getHelpers().bytesToString(httpData[0].getResponse());
+        
+        if (overwriteFile == 0) {
+        	// User wants to overwrite an existing file,
+        	// keep that filename instead; don't insert any custom suffix
+        	destinationFilename = destinationFile.getPath();
+        } else { 
+            destinationFilename = destinationFile.getPath().concat(filenameSuffix);
         }
-
-        // Write files on disk
-        for (int i = 0; i < 2; i++) {
-            File outfile = new File(filenames.get(i));
-            try {
-                PrintWriter outfileWriter = new PrintWriter(outfile);
-                if (i == 0) {
-                    outfileWriter.write(callbacks.getHelpers().bytesToString(httpRequestResponse[0].getRequest()));
-                    outfileWriter.close();
-                } else {
-                    outfileWriter.write(callbacks.getHelpers().bytesToString(httpRequestResponse[0].getResponse()));
-                    outfileWriter.close();
-                }
-            } catch (FileNotFoundException e2) {
-                throw new RuntimeException(e2);
-            }
-        }
-    }
-
-    private void setFilenames(String filePath, ArrayList<String> filenames, int index) {
-        final String substring = filePath.substring(0, filePath.length() - index);
-        filenames.add(substring.concat(httpRequestFilenameSuffix));
-        filenames.add(substring.concat(httpResponseFilenameSuffix));
+      
+        // Write data to a single file
+        File outputFile = new File(destinationFilename);
+        try {
+			PrintWriter outputFileWriter = new PrintWriter(outputFile);
+			outputFileWriter.write(request);
+			outputFileWriter.write(dataSeparator);
+			outputFileWriter.write(response);
+			outputFileWriter.close();
+			
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
     }
 
     private void captureScreenshot(File destinationFile) throws AWTException,

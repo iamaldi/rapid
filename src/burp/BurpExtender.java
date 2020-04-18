@@ -13,7 +13,7 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory, IContex
 
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
         this.callbacks = callbacks;
-        this.callbacks.setExtensionName("Rapid");
+        this.callbacks.setExtensionName("Rapid v0.4-beta");
         this.callbacks.registerContextMenuFactory(this);
     }
 
@@ -21,13 +21,20 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory, IContex
     public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
         byte context = invocation.getInvocationContext();
         List<JMenuItem> menu = new ArrayList<JMenuItem>();
-        if (context == IContextMenuInvocation.CONTEXT_INTRUDER_ATTACK_RESULTS || context == IContextMenuInvocation.CONTEXT_INTRUDER_PAYLOAD_POSITIONS) {
+        
+        // Context conditional statements
+        boolean isIntruderAttackResultsContext = context == IContextMenuInvocation.CONTEXT_INTRUDER_ATTACK_RESULTS;
+        boolean isIntruderPayloadPositionsContext = context == IContextMenuInvocation.CONTEXT_INTRUDER_PAYLOAD_POSITIONS;
+        
+        // Where is our extension being called from?
+        if (isIntruderAttackResultsContext || isIntruderPayloadPositionsContext) {
             return menu;
         } else {
             Rapid rapid = new Rapid(callbacks, invocation);
 
-            menu.add(rapid.getMenuEntry("Rapid - Save HTTP Request and Response", false));
+            menu.add(rapid.getMenuEntry("Rapid - Save HTTP Request & Response", false));
             menu.add(rapid.getMenuEntry("Rapid - Save Files & Screenshot", true));
+            
             return menu;
         }
     }
